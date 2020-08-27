@@ -10,14 +10,14 @@ class Round(db.Model):
     MaVD = Column(Integer, primary_key=True, autoincrement=True)
     TenVD = Column(String(45), nullable=False)
 
-    FKTranDauVongDau = relationship("Match", backref="vongdau", lazy=True)
+    FK_TranDauVongDau = relationship("Match", backref="vongdau", lazy=True)
 
     # def __str__(self):
     #     return self.name
 
 class Match(db.Model): 
     __tablename__ = "trandau"
-    MaTD = Column(Integer, primary_key=True, autoincrement=True) #Column(String(10), primary_key=True)
+    MaTD = Column(Integer, primary_key=True, autoincrement=True)
     DoiNha = Column(String(45), nullable=False)
     DoiKhach = Column(String(45), nullable=False)
     NgayThiDau = Column(Date, nullable=False)
@@ -26,22 +26,24 @@ class Match(db.Model):
     
     MaVD = Column(Integer, ForeignKey(Round.MaVD), nullable=False)
 
-    FKBanThangTranDau = relationship("Goal", backref="trandau", lazy=True)
+    FK_BanThang_TranDau = relationship("Goal", backref="trandau", lazy=True)
 
+    # FK_DoiBong_TranDau1 = relationship("Team", backref="trandau", lazy=True)
+    # FK_DoiBong_TranDau2 = relationship("Team", backref="trandau1", lazy=True)
     # def __str__(self):
     #     return self.name
 
 class Team(db.Model): 
     __tablename__ = "doibong"
-    MaDB = Column(Integer, primary_key=True, autoincrement=True)#Column(String(10), primary_key=True)
+    MaDB = Column(Integer, primary_key=True, autoincrement=True)
     TenDB = Column(String(50), nullable=False)
     SanNha = Column(String(50), nullable=False)
     SoLuongCauThu = Column(Integer, nullable=False)
 
-    # MaTranDau = Column(String(10), ForeignKey(Match.DoiNha))
-    # MaTranDau1 = Column(String(10), ForeignKey(Match.DoiKhach))
+    # MaTranDau = Column(String(45), ForeignKey(Match.DoiNha))
+    # MaTranDau1 = Column(String(45), ForeignKey(Match.DoiKhach))
 
-    FKCauThuDoiBong = relationship("Player", backref="doibong", lazy=True)
+    FKCauThuDoiBong = relationship("Player", backref="team", lazy=True)
 
     def __str__(self):
         return self.name
@@ -95,7 +97,7 @@ class Goal(db.Model):
 
 class Regulation(db.Model):
     __tablename__ = "quydinh"
-    MaQD = Column(Integer, primary_key=True, autoincrement=True)#Column(Integer, primary_key=True, autoincrement=True)
+    MaQD = Column(Integer, primary_key=True, autoincrement=True)
     TuoiToiThieu = Column(Integer, nullable=False)
     TuoiToiDa = Column(Integer, nullable=False)
     SoCauThuToiThieu = Column(Integer, nullable=False)
@@ -106,6 +108,17 @@ class Regulation(db.Model):
     DiemSoThua = Column(Integer, nullable=False)
     DiemSoHoa = Column(Integer, nullable=False)
     ThuTuUuTienXepHang = Column(Integer, nullable=False)
+
+class User(db.Model):
+    __tablename__ = "nguoidung"
+    Id = Column(Integer, primary_key=True, autoincrement=True)
+    FullName = Column(String(45), nullable=False)
+    UserName = Column(String(45), nullable=False)
+    PassWord = Column(String(45), nullable=False)
+    Email = Column(String(45), nullable=False)
+    BirthDate = Column(Date, nullable=True)
+    Address = Column(String(45), nullable=False)
+    Role = Column(String(45), nullable=False)
 
     def __str__(self):
         return self.name
@@ -136,6 +149,9 @@ class GoalModelView(ModelView):
 class RegulationModelView(ModelView):
     column_display_pk = True
 
+class UserModelView(ModelView):
+    column_display_pk = True
+
 admin.add_view(RoundModelView(Round, db.session))
 admin.add_view(MatchModelView(Match, db.session))
 admin.add_view(TeamModelView(Team, db.session))
@@ -144,5 +160,6 @@ admin.add_view(PlayerModelView(Player, db.session))
 admin.add_view(GoalScoredModelView(GoalScored, db.session))
 admin.add_view(GoalModelView(Goal, db.session))
 admin.add_view(RegulationModelView(Regulation, db.session))
+admin.add_view(UserModelView(User, db.session))
 
 #-------endadmin-------
