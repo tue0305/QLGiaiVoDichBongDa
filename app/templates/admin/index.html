@@ -1,6 +1,11 @@
 {% extends 'admin/master.html' %}
 
 {% block body %}
-<h1>Welcome to the admin page</h1>
-
+    {% if current_user.is_authenticated %}
+        <h1>Welcome to the admin page</h1>
+        <h2>{{ current_user.name }}</h2>
+    {% else %}
+        <h1 class="text-center">Login</h1>
+        {% include 'admin/login.html' %}
+    {% endif %}
 {% endblock %}

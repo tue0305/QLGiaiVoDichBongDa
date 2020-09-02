@@ -1,14 +1,33 @@
+from flask import redirect
+from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView
-from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String
+from flask_login import UserMixin, current_user, logout_user
+from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer,
+                        String)
 from sqlalchemy.orm import relationship
 
 from app import admin, db
 
 
+class User(db.Model, UserMixin):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(45), nullable=False)
+    userName = Column(String(45), nullable=False)
+    passWord = Column(String(100), nullable=False)
+    email = Column(String(45), nullable=False)
+    birthDate = Column(Date, nullable=True)
+    address = Column(String(45), nullable=True)
+    role = Column(String(45), nullable=False)
+    active = Column(Boolean, default=True)
+
+    def __str__(self):
+        return self.name
+
 class Round(db.Model):
     __tablename__ = "vongdau"
-    MaVD = Column(Integer, primary_key=True, autoincrement=True)
-    TenVD = Column(String(45), nullable=False)
+    maVD = Column(Integer, primary_key=True, autoincrement=True)
+    tenVD = Column(String(45), nullable=False)
 
     FK_TranDauVongDau = relationship("Match", backref="vongdau", lazy=True)
 
@@ -17,14 +36,14 @@ class Round(db.Model):
 
 class Match(db.Model): 
     __tablename__ = "trandau"
-    MaTD = Column(Integer, primary_key=True, autoincrement=True)
-    DoiNha = Column(String(45), nullable=False)
-    DoiKhach = Column(String(45), nullable=False)
-    NgayThiDau = Column(Date, nullable=False)
-    GioThiDau = Column(Float, nullable=False)
-    SanThiDau = Column(String(45), nullable=False)
+    maTD = Column(Integer, primary_key=True, autoincrement=True)
+    doiNha = Column(String(45), nullable=False)
+    doiKhach = Column(String(45), nullable=False)
+    ngayThiDau = Column(Date, nullable=False)
+    gioThiDau = Column(Float, nullable=False)
+    sanThiDau = Column(String(45), nullable=False)
     
-    MaVD = Column(Integer, ForeignKey(Round.MaVD), nullable=False)
+    maVD = Column(Integer, ForeignKey(Round.maVD), nullable=False)
 
     FK_BanThang_TranDau = relationship("Goal", backref="trandau", lazy=True)
 
@@ -35,10 +54,10 @@ class Match(db.Model):
 
 class Team(db.Model): 
     __tablename__ = "doibong"
-    MaDB = Column(Integer, primary_key=True, autoincrement=True)
-    TenDB = Column(String(50), nullable=False)
-    SanNha = Column(String(50), nullable=False)
-    SoLuongCauThu = Column(Integer, nullable=False)
+    maDB = Column(Integer, primary_key=True, autoincrement=True)
+    tenDB = Column(String(50), nullable=False)
+    sanNha = Column(String(50), nullable=False)
+    soLuongCauThu = Column(Integer, nullable=False)
 
     # MaTranDau = Column(String(45), ForeignKey(Match.DoiNha))
     # MaTranDau1 = Column(String(45), ForeignKey(Match.DoiKhach))
@@ -50,8 +69,8 @@ class Team(db.Model):
 
 class PlayerType(db.Model): 
     __tablename__ = "loaicauthu"
-    MaLoaiCT = Column(Integer, primary_key=True, autoincrement=True)#Column(String(10), primary_key=True)
-    TenLoaiCT = Column(String(45), nullable=False)
+    maLoaiCT = Column(Integer, primary_key=True, autoincrement=True)
+    tenLoaiCT = Column(String(45), nullable=False)
 
     FKCauThuLoaiCauThu = relationship("Player", backref="loaicauthu", lazy=True)
 
@@ -60,13 +79,13 @@ class PlayerType(db.Model):
 
 class Player(db.Model):
     __tablename__ = "cauthu"
-    MaCT = Column(Integer, primary_key=True, autoincrement=True)#Column(String(10), primary_key=True)
-    TenCT = Column(String(45), nullable=False)
-    NgaySinh = Column(Date, nullable=False)
-    GhiChu = Column(String(50), nullable=True)
+    maCT = Column(Integer, primary_key=True, autoincrement=True)
+    tenCT = Column(String(45), nullable=False)
+    ngaySinh = Column(Date, nullable=False)
+    ghiChu = Column(String(50), nullable=True)
 
-    MaLoaiCT = Column(Integer, ForeignKey(PlayerType.MaLoaiCT), nullable=False)
-    MaDB = Column(Integer, ForeignKey(Team.MaDB), nullable=False)
+    maLoaiCT = Column(Integer, ForeignKey(PlayerType.maLoaiCT), nullable=False)
+    maDB = Column(Integer, ForeignKey(Team.maDB), nullable=False)
 
     FKBanThangCauThu = relationship("Goal", backref="cauthu", lazy=True)
 
@@ -75,8 +94,8 @@ class Player(db.Model):
 
 class GoalScored(db.Model): 
     __tablename__ = "loaibanthang"
-    MaLoaiBT = Column(Integer, primary_key=True, autoincrement=True)#Column(String(10), primary_key=True)
-    TenLoaiBT = Column(String(45), nullable=False)
+    maLoaiBT = Column(Integer, primary_key=True, autoincrement=True)
+    tenLoaiBT = Column(String(45), nullable=False)
 
     FKBanThangLoaiBanThang = relationship("Goal", backref="loaibanthang", lazy=True)
 
@@ -85,72 +104,110 @@ class GoalScored(db.Model):
 
 class Goal(db.Model):
     __tablename__ = "banthang"
-    MaBT = Column(Integer, primary_key=True, autoincrement=True)#Column(String(10), primary_key=True)
-    ThoiDiem = Column(Float, nullable=False)
+    maBT = Column(Integer, primary_key=True, autoincrement=True)
+    thoiDiem = Column(Float, nullable=False)
 
-    MaTD = Column(Integer, ForeignKey(Match.MaTD), nullable=False)
-    MaCT = Column(Integer, ForeignKey(Player.MaCT), nullable=False)
-    MaLoaiBT = Column(Integer, ForeignKey(GoalScored.MaLoaiBT), nullable=False)
+    maTD = Column(Integer, ForeignKey(Match.maTD), nullable=False)
+    maCT = Column(Integer, ForeignKey(Player.maCT), nullable=False)
+    maLoaiBT = Column(Integer, ForeignKey(GoalScored.maLoaiBT), nullable=False)
 
     def __str__(self):
         return self.name
 
 class Regulation(db.Model):
     __tablename__ = "quydinh"
-    MaQD = Column(Integer, primary_key=True, autoincrement=True)
-    TuoiToiThieu = Column(Integer, nullable=False)
-    TuoiToiDa = Column(Integer, nullable=False)
-    SoCauThuToiThieu = Column(Integer, nullable=False)
-    SoCauThuToiDa = Column(Integer, nullable=False)
-    SoCauThuNuocNgoaiToiDa = Column(Integer, nullable=False)
-    ThoiDiemGhiBanToiDa = Column(Integer, nullable=False)
-    DiemSoThang = Column(Integer, nullable=False)
-    DiemSoThua = Column(Integer, nullable=False)
-    DiemSoHoa = Column(Integer, nullable=False)
-    ThuTuUuTienXepHang = Column(Integer, nullable=False)
-
-class User(db.Model):
-    __tablename__ = "nguoidung"
-    Id = Column(Integer, primary_key=True, autoincrement=True)
-    FullName = Column(String(45), nullable=False)
-    UserName = Column(String(45), nullable=False)
-    PassWord = Column(String(45), nullable=False)
-    Email = Column(String(45), nullable=False)
-    BirthDate = Column(Date, nullable=True)
-    Address = Column(String(45), nullable=False)
-    Role = Column(String(45), nullable=False)
-
-    def __str__(self):
-        return self.name
+    maQD = Column(Integer, primary_key=True, autoincrement=True)
+    tuoiToiThieu = Column(Integer, nullable=False)
+    tuoiToiDa = Column(Integer, nullable=False)
+    soCauThuToiThieu = Column(Integer, nullable=False)
+    soCauThuToiDa = Column(Integer, nullable=False)
+    soCauThuNuocNgoaiToiDa = Column(Integer, nullable=False)
+    thoiDiemGhiBanToiDa = Column(Integer, nullable=False)
+    diemSoThang = Column(Integer, nullable=False)
+    diemSoThua = Column(Integer, nullable=False)
+    diemSoHoa = Column(Integer, nullable=False)
+    thuTuUuTienXepHang = Column(Integer, nullable=False)
 
 #-------admin-------
 
 class RoundModelView(ModelView):
     column_display_pk = True
+    can_create = True
+    can_edit = True
+    can_export = True
+    can_delete = True
+    can_export = True
+    form_columns = ("tenVD",)
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 class MatchModelView(ModelView):
     column_display_pk = True
+    form_columns = ("doiNha", "doiKhach", "ngayThiDau", "gioThiDau", "sanThiDau", "maVD")
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 class TeamModelView(ModelView):
     column_display_pk = True
 
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 class PlayerTypeModelView(ModelView):
     column_display_pk = True
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 class PlayerModelView(ModelView):
     column_display_pk = True
 
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 class GoalScoredModelView(ModelView):
     column_display_pk = True
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 class GoalModelView(ModelView):
     column_display_pk = True
 
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 class RegulationModelView(ModelView):
     column_display_pk = True
 
+    def is_accessible(self):
+        return current_user.is_authenticated
+
 class UserModelView(ModelView):
     column_display_pk = True
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+#======= view =======
+
+class AboutUsView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/about-us.html')
+    def is_accessible(self):
+        return True
+
+class LogoutView(BaseView):
+    @expose('/')
+    def index(self):
+        logout_user()
+        return redirect('/admin')
+    def is_accessible(self):
+        return current_user.is_authenticated
+#======= endview =======
 
 admin.add_view(RoundModelView(Round, db.session))
 admin.add_view(MatchModelView(Match, db.session))
@@ -162,4 +219,6 @@ admin.add_view(GoalModelView(Goal, db.session))
 admin.add_view(RegulationModelView(Regulation, db.session))
 admin.add_view(UserModelView(User, db.session))
 
-#-------endadmin-------
+admin.add_view(AboutUsView(name='About us'))
+admin.add_view(LogoutView(name='Logout'))
+#------- endadmin -------
