@@ -15,9 +15,21 @@ def index():
 def portfolio_details():
     return render_template('portfolio-details.html')
 
-@app.route('/inner-page')
-def inner_page():
-    return render_template('inner-page.html')
+@app.route('/tournament')
+def tournament():
+    return render_template('tournament.html')
+
+@app.route('/team')
+def team():
+    return render_template('team.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_user():
+    return render_template('login.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.route('/login-admin', methods=['GET', 'POST'])
 def login_admin():
@@ -34,10 +46,10 @@ def login_admin():
 def user_load(user_id):
     return User.query.get(user_id)
 
-# @app.route('/model')
-# def model():
-#     models.db.create_all()
-#     return 'successful'
+@app.route('/model')
+def model():
+    models.db.create_all()
+    return 'successful'
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -9,12 +9,13 @@
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#team">Team</a></li>
-          <li class="drop-down"><a href="">Drop Down</a>
+          <li class="active"><a href="{{ url_for('index') }}">Trang chủ</a></li>
+          <li><a href="#">Tạo giải đấu</a></li>
+          <li><a href="{{ url_for('tournament') }}">Tìm giải đấu</a></li>
+          <li><a href="{{ url_for('team') }}">Tìm đội bóng</a></li>
+          <li><a href="{{ url_for('login_user') }}">Đăng nhập</a></li>
+          <li><a href="#registration">Đăng ký</a></li>
+          <li class="drop-down"><a href="">Hướng đẫn</a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
               <li class="drop-down"><a href="#">Drop Down 2</a>
@@ -31,7 +32,7 @@
               <li><a href="#">Drop Down 5</a></li>
             </ul>
           </li>
-          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="{{ url_for('contact') }}">Liên hệ</a></li>
 
         </ul>
       </nav><!-- .nav-menu -->

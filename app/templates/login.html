@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Đăng nhập{% endblock %}
+
+{% block body %}
+<main id="main">
+    <div class="container">
+        <form action="{{ url_for('login_user') }}" method="POST" class="form-login">
+            <div class="form-group">
+                <input type="text" name="username" id="user" placeholder="Enter username..." class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" id="pass" placeholder="Enter password..." class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-danger">
+            </div>
+        </form>
+    </div>
+</main><!-- End #main -->
+
+{% endblock %}

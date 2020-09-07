@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>{% block title %}Index{% endblock %} - Football League</title>
+  <title>{% block title %}Trang chủ{% endblock %} - Football League</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -44,6 +44,7 @@
   <!-- End Header -->
 
   {% block body %}
+
     <!-- ======= Hero Section ======= -->
     <section id="hero">
 		<div class="hero-container" data-aos="fade-up">
@@ -55,27 +56,26 @@
     <!-- End Hero -->
 
     <main id="main">
+    <!-- ======= Counts Section ======= -->
+      {% block counts %}
+       {% include 'base/counts.html' %}
+      {% endblock %}
+   <!-- End Counts Section -->
 
     <!-- ======= About Section ======= -->
     {% block about %}
       {% include 'base/about.html' %}
     {% endblock %}
-      <!-- End About Section -->
+    <!-- End About Section -->
 
     <!-- ======= Services Section ======= -->
-    {% block services %}
+    <!-- {% block services %}
       {% include 'base/services.html' %}
-    {% endblock %}
-      <!-- End Services Section -->
+    {% endblock %} -->
+    <!-- End Services Section -->
 
-    <!-- ======= Counts Section ======= -->
-    {% block counts %}
-      {% include 'base/counts.html' %}
-    {% endblock %}
-      <!-- End Counts Section -->
-
-      <!-- ======= Cta Section ======= -->
-      <section id="cta" class="cta">
+    <!-- ======= Cta Section ======= -->
+      <!-- <section id="cta" class="cta">
         <div class="container" data-aos="zoom-in">
 
           <div class="text-center">
@@ -85,34 +85,18 @@
           </div>
 
         </div>
-      </section><!-- End Cta Section -->
-
-    <!-- ======= Portfolio Section ======= -->
-    {% block portfolio %}
-      {% include 'base/portfolio.html' %}
-    {% endblock %}
-      <!-- End Portfolio Section -->
+      </section> -->
+    <!-- End Cta Section -->
 
     <!-- ======= Testimonials Section ======= -->
-    {% block testimonials %}
+    <!-- {% block testimonials %}
       {% include 'base/testimonials.html' %}
-    {% endblock %}
-      <!-- End Testimonials Section -->
-
-    <!-- ======= Team Section ======= -->
-    {% block team %}
-      {% include 'base/team.html' %}
-    {% endblock %}
-      <!-- End Team Section -->
-    
-    <!-- ======= Contact Section ======= -->
-    {% block contact %}
-      {% include 'base/contact.html' %}
-    {% endblock %}
-      <!-- End Contact Section -->
+    {% endblock %} -->
+    <!-- End Testimonials Section -->
 
     </main><!-- End #main -->
   {% endblock%}
+
   <!-- ======= Footer ======= -->
   {% block footer %}
   	{% include 'base/footer.html' %}
