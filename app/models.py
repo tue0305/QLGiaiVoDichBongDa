@@ -21,10 +21,24 @@ class User(db.Model, UserMixin):
     role = Column(String(45), nullable=False)
     active = Column(Boolean, default=True)
 
+class Tournament(db.Model):
+    __tablename__ = "giaidau"
+    maGD = Column(Integer, primary_key=True, autoincrement=True)
+    tenGD = Column(String(45), nullable=False)
+    ngayBatDau = Column(Date, nullable=False)
+    ngayKetThuc = Column(Date, nullable=False)
+
+    FK_GiaiDau_VongDau = relationship("Round", backref="giaidau", lazy=True)
+
+    def __str__(self):
+        return self.tenGD
+
 class Round(db.Model):
     __tablename__ = "vongdau"
     maVD = Column(Integer, primary_key=True, autoincrement=True)
     tenVD = Column(String(45), nullable=False)
+
+    giaiDau = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
 
     FK_VongDau_TranDau = relationship("Match", backref="vongdau", lazy=True)
 
@@ -44,8 +58,7 @@ class Match(db.Model):
 
     FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
 
-    #FK_TranDau_DoiBong = relationship("Team", backref="trandau")#
-    # FK_TranDau_DoiBong = relationship("Team", backref="doikhach", lazy=True) #
+    FK_TranDau_DoiBong = relationship("Team", backref="trandau", lazy=True)
 
     def __str__(self):
         return self.doiNha + ' vs ' + self.doiKhach
@@ -58,9 +71,7 @@ class Team(db.Model):
     sanNha = Column(String(45), nullable=False)
     soLuongCauThu = Column(Integer, nullable=False)
 
-    #doi1 = Column(Integer, ForeignKey(Match.maTD), uselist=False, nullable=False)
-    #doi2 = Column(Integer, ForeignKey(Match.doiKhach), nullable=False)
-    #trandau = relationship("Match", back_populates="doibong") #
+    tranDau = Column(Integer, ForeignKey(Match.maTD), nullable=False)#uselist=False
 
     FK_DoiBong_CauThu = relationship("Player", backref="doibong", lazy=True)
 

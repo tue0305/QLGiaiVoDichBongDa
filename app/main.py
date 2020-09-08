@@ -23,8 +23,8 @@ def tournament():
 def team():
     return render_template('team.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login_user():
+@app.route('/login-user', methods=['GET', 'POST'])
+def login_users():
     return render_template('login.html')
 
 @app.route('/contact')
