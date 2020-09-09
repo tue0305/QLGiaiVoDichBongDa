@@ -17,11 +17,11 @@ def portfolio_details():
 
 @app.route('/tournament')
 def tournament():
-    return render_template('tournament.html')
+    return render_template('tournament.html', tournaments=dao.read_tournament())
 
 @app.route('/team')
 def team():
-    return render_template('team.html')
+    return render_template('team.html', teams=dao.read_team())
 
 @app.route('/login-user', methods=['GET', 'POST'])
 def login_users():

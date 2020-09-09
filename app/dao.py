@@ -9,3 +9,9 @@ def validate_user(username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     return User.query.filter(User.userName == username.strip(), 
                             User.passWord == password).first()
+
+def read_tournament():
+    return Tournament.query.all()
+
+def read_team():
+    return Team.query.all()

@@ -27,8 +27,9 @@ class Tournament(db.Model):
     tenGD = Column(String(45), nullable=False)
     ngayBatDau = Column(Date, nullable=False)
     ngayKetThuc = Column(Date, nullable=False)
+    avatar = Column(String(100))
 
-    FK_GiaiDau_VongDau = relationship("Round", backref="giaidau", lazy=True)
+    FK_GiaiDau_TranDau = relationship("Match", backref="giaidau", lazy=True)
 
     def __str__(self):
         return self.tenGD
@@ -37,8 +38,6 @@ class Round(db.Model):
     __tablename__ = "vongdau"
     maVD = Column(Integer, primary_key=True, autoincrement=True)
     tenVD = Column(String(45), nullable=False)
-
-    giaiDau = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
 
     FK_VongDau_TranDau = relationship("Match", backref="vongdau", lazy=True)
 
@@ -55,6 +54,7 @@ class Match(db.Model):
     sanThiDau = Column(String(45), nullable=False)
 
     maVD = Column(Integer, ForeignKey(Round.maVD), nullable=False)
+    giaiDau = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
 
     FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
 
@@ -70,6 +70,7 @@ class Team(db.Model):
     tenDB = Column(String(45), nullable=False)
     sanNha = Column(String(45), nullable=False)
     soLuongCauThu = Column(Integer, nullable=False)
+    avatar = Column(String(100))
 
     tranDau = Column(Integer, ForeignKey(Match.maTD), nullable=False)#uselist=False
 
@@ -139,6 +140,12 @@ class Regulation(db.Model):
     thuTuUuTienXepHang = Column(Integer, nullable=False)
 
 #-------admin-------
+
+class TournamentModelView(ModelView):
+    column_display_pk = True
+    
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 class RoundModelView(ModelView):
     column_display_pk = True
@@ -212,6 +219,7 @@ class LogoutView(BaseView):
         return current_user.is_authenticated
 #======= endview =======
 
+admin.add_view(TournamentModelView(Tournament, db.session))
 admin.add_view(RoundModelView(Round, db.session))
 admin.add_view(MatchModelView(Match, db.session))
 admin.add_view(TeamModelView(Team, db.session))
