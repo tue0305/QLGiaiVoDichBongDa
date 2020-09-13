@@ -23,6 +23,10 @@ def tournament():
 def team():
     return render_template('team.html', teams=dao.read_team())
 
+@app.route('/player')
+def player():
+    return render_template('player.html', players=dao.read_player())
+
 @app.route('/login-user', methods=['GET', 'POST'])
 def login_users():
     return render_template('login.html')

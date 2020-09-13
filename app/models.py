@@ -5,6 +5,7 @@ from flask_login import UserMixin, current_user, logout_user
 from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer,
                         String)
 from sqlalchemy.orm import relationship
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import admin, db
 
@@ -20,6 +21,12 @@ class User(db.Model, UserMixin):
     address = Column(String(45), nullable=True)
     role = Column(String(45), nullable=False)
     active = Column(Boolean, default=True)
+
+    def set_password(self, password):
+        self.passWord = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.passWord, password)
 
 class Tournament(db.Model):
     __tablename__ = "giaidau"
