@@ -9,13 +9,13 @@
 {% endblock %}
 
 {% block body %}
+
 <main id="main">
   <section id="team" class="team">
     <div class="container">
-        <form action="" method="get">
-            <input type="text" name="keyword">
-            <input type="submit" value="Tìm">
-        </form>
+    <!-- Find -->
+    
+    <!-- endfind -->
 
         <div class="section-title" data-aos="fade-in" data-aos-delay="100">
             <h2>Đội bóng</h2>
@@ -29,7 +29,7 @@
           <div class="member" data-aos="fade-up">
             <div class="pic"><img src="{{ team.avatar }}" class="img-fluid" alt="{{ team.tenDB }}"></div>
             <div class="member-info">
-              <h4>Tên đội bóng: {{ team.tenDB }}</h4>
+              <h4>{{ team.tenDB }}</h4>
               <span>Số cầu thủ: {{ team.soLuongCauThu }}</span>
               <div class="social">
                 <a href=""><i class="icofont-twitter"></i></a>
