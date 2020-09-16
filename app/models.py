@@ -28,18 +28,20 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.passWord, password)
 
+
 class Tournament(db.Model):
     __tablename__ = "giaidau"
     maGD = Column(Integer, primary_key=True, autoincrement=True)
     tenGD = Column(String(45), nullable=False)
     ngayBatDau = Column(Date, nullable=False)
     ngayKetThuc = Column(Date, nullable=False)
-    avatar = Column(String(100))
+    avatar = Column(String(200), nullable=False)
 
     FK_GiaiDau_TranDau = relationship("Match", backref="giaidau", lazy=True)
 
     def __str__(self):
         return self.tenGD
+
 
 class Round(db.Model):
     __tablename__ = "vongdau"
@@ -51,25 +53,6 @@ class Round(db.Model):
     def __str__(self):
         return self.tenVD
 
-class Match(db.Model): 
-    __tablename__ = "trandau"
-    maTD = Column(Integer, primary_key=True, autoincrement=True)
-    doiNha = Column(String(45), nullable=False)
-    doiKhach = Column(String(45), nullable=False)
-    ngayThiDau = Column(Date, nullable=False)
-    gioThiDau = Column(Float, nullable=False)
-    sanThiDau = Column(String(45), nullable=False)
-
-    maVD = Column(Integer, ForeignKey(Round.maVD), nullable=False)
-    giaiDau = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
-
-    FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
-
-    FK_TranDau_DoiBong = relationship("Team", backref="trandau", lazy=True)
-
-    def __str__(self):
-        return self.doiNha + ' vs ' + self.doiKhach
-
 
 class Team(db.Model): 
     __tablename__ = "doibong"
@@ -77,15 +60,33 @@ class Team(db.Model):
     tenDB = Column(String(45), nullable=False)
     sanNha = Column(String(45), nullable=False)
     soLuongCauThu = Column(Integer, nullable=False)
-    avatar = Column(String(100))
-
-    tranDau = Column(Integer, ForeignKey(Match.maTD), nullable=False)#uselist=False
+    avatar = Column(String(200), nullable=False)
 
     FK_DoiBong_CauThu = relationship("Player", backref="doibong", lazy=True)
 
     def __str__(self):
         return self.tenDB
 
+
+class Match(db.Model): 
+    __tablename__ = "trandau"
+    maTD = Column(Integer, primary_key=True, autoincrement=True)
+    ngayThiDau = Column(Date, nullable=False)
+    gioThiDau = Column(Float, nullable=False)
+    sanThiDau = Column(String(45), nullable=False)
+
+    tranDau = Column(Integer, ForeignKey(Team.maDB), nullable=False)
+    tranDau1 = Column(Integer, ForeignKey(Team.maDB), nullable=False)
+    doiNha = relationship("Team", foreign_keys=[tranDau])
+    doiKhach = relationship("Team", foreign_keys=[tranDau1])
+
+    maVD = Column(Integer, ForeignKey(Round.maVD), nullable=False)
+    maGD = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
+    
+    FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
+
+    # def __str__(self):
+    #     return self.doiNha
 
 class PlayerType(db.Model): 
     __tablename__ = "loaicauthu"
@@ -97,20 +98,23 @@ class PlayerType(db.Model):
     def __str__(self):
         return self.tenLoaiCT
 
+
 class Player(db.Model):
     __tablename__ = "cauthu"
     maCT = Column(Integer, primary_key=True, autoincrement=True)
     tenCT = Column(String(45), nullable=False)
     ngaySinh = Column(Date, nullable=False)
     ghiChu = Column(String(100), nullable=True)
+    avatar = Column(String(200))
 
     maLoaiCT = Column(Integer, ForeignKey(PlayerType.maLoaiCT), nullable=False)
     maDB = Column(Integer, ForeignKey(Team.maDB), nullable=False)
-
+    
     FKBanThangCauThu = relationship("Goal", backref="cauthu", lazy=True)
 
     def __str__(self):
         return self.tenCT
+
 
 class GoalScored(db.Model): 
     __tablename__ = "loaibanthang"
@@ -121,6 +125,7 @@ class GoalScored(db.Model):
 
     def __str__(self):
         return self.tenLoaiBT
+
 
 class Goal(db.Model):
     __tablename__ = "banthang"
@@ -160,13 +165,13 @@ class RoundModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
 
-class MatchModelView(ModelView):
+class TeamModelView(ModelView):
     column_display_pk = True
 
     def is_accessible(self):
         return current_user.is_authenticated
 
-class TeamModelView(ModelView):
+class MatchModelView(ModelView):
     column_display_pk = True
 
     def is_accessible(self):
@@ -228,8 +233,8 @@ class LogoutView(BaseView):
 
 admin.add_view(TournamentModelView(Tournament, db.session))
 admin.add_view(RoundModelView(Round, db.session))
-admin.add_view(MatchModelView(Match, db.session))
 admin.add_view(TeamModelView(Team, db.session))
+admin.add_view(MatchModelView(Match, db.session))
 admin.add_view(PlayerTypeModelView(PlayerType, db.session))
 admin.add_view(PlayerModelView(Player, db.session))
 admin.add_view(GoalScoredModelView(GoalScored, db.session))

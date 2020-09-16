@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends 'base/master.html' %}
 
 {% block title %}Giải đấu{% endblock %}
 
@@ -29,7 +29,7 @@
             <div class="col-lg-4 col-md-6 portfolio-item filter-app">
                 <div class="portfolio-wrap">
                   <img src="{{ tournament.avatar }}" class="img-fluid" alt="tournament.tenGD">
-                  <h4>{{ tournament.tenGD }}</h4>
+                  <h4 class="text-center">{{ tournament.tenGD }}</h4>
                   <div class="portfolio-links">
                     <a href="{{ tournament.avatar }}" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
                     <a href="{{ url_for('portfolio_details') }}" title="More Details"><i class="bx bx-link"></i></a>

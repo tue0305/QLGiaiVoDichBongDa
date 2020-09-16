@@ -31,6 +31,10 @@ def player():
 def login_users():
     return render_template('login.html')
 
+@app.route('/register-user', methods=['POST'])
+def register_users():
+    return ''
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')

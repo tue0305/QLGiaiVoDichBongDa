@@ -1,16 +1,26 @@
-{% extends 'base/base.html' %}
+{% extends 'base/master.html' %}
 
 {% block title %}Đội bóng{% endblock %}
+
+{% block head %}
+<style>
+
+</style>
+{% endblock %}
 
 {% block body %}
 <main id="main">
   <section id="team" class="team">
     <div class="container">
+        <form action="" method="get">
+            <input type="text" name="keyword">
+            <input type="submit" value="Tìm">
+        </form>
 
-      <div class="section-title" data-aos="fade-in" data-aos-delay="100">
-        <h2>Đội bóng</h2>
-        <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-      </div>
+        <div class="section-title" data-aos="fade-in" data-aos-delay="100">
+            <h2>Đội bóng</h2>
+            <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
+        </div>
 
       <div class="row">
         {% if teams %}
