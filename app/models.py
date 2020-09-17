@@ -1,9 +1,8 @@
-from flask import redirect
+from flask import redirect, url_for
 from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, current_user, logout_user
-from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer,
-                        String)
+from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer, String)
 from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -17,16 +16,16 @@ class User(db.Model, UserMixin):
     userName = Column(String(45), nullable=False)
     passWord = Column(String(100), nullable=False)
     email = Column(String(45), nullable=False)
-    birthDate = Column(Date, nullable=True)
-    address = Column(String(45), nullable=True)
-    role = Column(String(45), nullable=False)
+    birthDate = Column(Date)
+    address = Column(String(45))
+    role = Column(String(45), default="Admin")
     active = Column(Boolean, default=True)
 
-    def set_password(self, password):
-        self.passWord = generate_password_hash(password)
+    # def set_password(self, password):
+    #     self.passWord = generate_password_hash(password)
     
-    def check_password(self, password):
-        return check_password_hash(self.passWord, password)
+    # def check_password(self, password):
+    #     return check_password_hash(self.passWord, password)
 
 
 class Tournament(db.Model):
@@ -35,7 +34,7 @@ class Tournament(db.Model):
     tenGD = Column(String(45), nullable=False)
     ngayBatDau = Column(Date, nullable=False)
     ngayKetThuc = Column(Date, nullable=False)
-    avatar = Column(String(200), nullable=False)
+    avatar = Column(String(200), default="https://img3.thuthuatphanmem.vn/uploads/2019/10/01/hinh-logo-bong-da_103805580.jpg")
 
     FK_GiaiDau_TranDau = relationship("Match", backref="giaidau", lazy=True)
 
@@ -60,7 +59,7 @@ class Team(db.Model):
     tenDB = Column(String(45), nullable=False)
     sanNha = Column(String(45), nullable=False)
     soLuongCauThu = Column(Integer, nullable=False)
-    avatar = Column(String(200), nullable=False)
+    avatar = Column(String(200), default="https://img3.thuthuatphanmem.vn/uploads/2019/10/01/mau-logo-bong-da-don-gian_103806674.png")
 
     FK_DoiBong_CauThu = relationship("Player", backref="doibong", lazy=True)
 
@@ -86,7 +85,7 @@ class Match(db.Model):
     FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
 
     # def __str__(self):
-    #     return self.doiNha
+    #     return 
 
 class PlayerType(db.Model): 
     __tablename__ = "loaicauthu"
@@ -105,7 +104,7 @@ class Player(db.Model):
     tenCT = Column(String(45), nullable=False)
     ngaySinh = Column(Date, nullable=False)
     ghiChu = Column(String(100), nullable=True)
-    avatar = Column(String(200))
+    avatar = Column(String(200), default="https://free.vector6.com/wp-content/uploads/2020/06/T6-U30-lvmuq2-Vector-Bong-Da-012.jpg")
 
     maLoaiCT = Column(Integer, ForeignKey(PlayerType.maLoaiCT), nullable=False)
     maDB = Column(Integer, ForeignKey(Team.maDB), nullable=False)
@@ -210,8 +209,8 @@ class RegulationModelView(ModelView):
 class UserModelView(ModelView):
     column_display_pk = True
 
-    # def is_accessible(self):
-    #     return current_user.is_authenticated
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 #======= view =======
 
@@ -226,7 +225,7 @@ class LogoutView(BaseView):
     @expose('/')
     def index(self):
         logout_user()
-        return redirect('/admin')
+        return redirect(url_for('login_users'))
     def is_accessible(self):
         return current_user.is_authenticated
 #======= endview =======
