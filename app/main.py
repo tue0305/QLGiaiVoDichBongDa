@@ -131,10 +131,10 @@ def login_admin():
 def user_load(user_id):
     return User.query.get(user_id)
 
-# @app.route('/model')
-# def model():
-#     models.db.create_all()
-#     return 'successful'
+@app.route('/models')
+def model():
+    models.db.create_all()
+    return 'successful'
 
 if __name__ == "__main__":
     app.run(debug=True)
