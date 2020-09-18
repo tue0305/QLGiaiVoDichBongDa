@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import redirect, render_template, request, session, url_for
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 
 from app import app, dao, login, models
 from app.models import *
@@ -46,11 +46,16 @@ def login_users():
         user = dao.validate_user(username, password)
         if user:
             login_user(user=user)
-            return redirect('/admin')
+            return redirect('/')
         else:
             msg_err = "Đăng nhập không thành công"
 
     return render_template('login.html', msg_err=msg_err)
+
+@app.route('/logout-user')
+def logout_users():
+    logout_user()
+    return redirect('/')
 
 @app.route('/register-user', methods=['POST', 'GET'])
 def register_users():

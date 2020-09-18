@@ -13,7 +13,6 @@
           <li><a href="{{ url_for('tournament') }}">Tìm giải đấu</a></li>
           <li><a href="{{ url_for('team') }}">Tìm đội bóng</a></li>
           <li><a href="{{ url_for('player') }}">Tìm cầu thủ</a></li>
-          <li><a href="{{ url_for('login_users') }}">Đăng nhập</a></li>
           <li class="drop-down"><a href="">Tạo</a>
             <ul>
               <li><a href="{{ url_for('create_tournament') }}">Tạo giải đấu</a></li>
@@ -29,7 +28,15 @@
             </ul>
           </li>
           <li><a href="{{ url_for('contact') }}">Liên hệ</a></li>
-
+          {% if not current_user.is_authenticated %}
+          <li><a href="{{ url_for('login_users') }}">Đăng nhập</a></li>
+          {% else %}
+          <li class="drop-down"><a href="">ab</a>
+            <ul>
+              <li><a href="{{ url_for('logout_users') }}">Đăng xuất</a></li>
+            </ul>
+          </li>
+          {% endif %}
         </ul>
       </nav><!-- .nav-menu -->
 
