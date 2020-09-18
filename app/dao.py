@@ -1,7 +1,7 @@
 import hashlib
 import os
 
-from app import app
+from app import app, db
 from app.models import *
 
 
@@ -18,3 +18,11 @@ def read_team():
 
 def read_player():
     return Player.query.all()
+
+def create_user(name, username, password, email):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+    user = User(name=name, userName=username, passWord=password, email=email)
+    db.session.add(user)
+    db.session.commit()
+    
+    

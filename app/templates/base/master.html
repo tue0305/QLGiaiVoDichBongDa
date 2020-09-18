@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons assets -->
-  <link href="{{ url_for('static', filename='img/favicon.png') }}" rel="icon"> 
+  <link href="{{ url_for('static', filename='img/logo-stadium.jpg') }}" rel="icon"> 
   <link href="{{ url_for('static', filename='img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -26,6 +26,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  
+  {% block head %}{% endblock %}
 
   <!-- =======================================================
   * Template Name: Squadfree - v2.2.0
@@ -119,7 +121,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
+  {% block script %}{% endblock %}
 </body>
 
 </html>

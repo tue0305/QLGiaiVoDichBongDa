@@ -1,10 +1,18 @@
 from functools import wraps
-
 from flask import redirect, render_template, request, session, url_for
 from flask_login import login_user
 
 from app import app, dao, login, models
 from app.models import *
+
+
+# def login_required(f):
+#     @wraps(f)
+#     def check(*args, **kwargs):
+#         if not session.get("user"):
+#             return redirect(url_for("login", next=request.url))
+#         return f(*args, **kwargs)
+#     return check
 
 
 @app.route('/')
@@ -29,8 +37,37 @@ def player():
 
 @app.route('/login-user', methods=['GET', 'POST'])
 def login_users():
-    return render_template('login.html')
+    msg_err = ""
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
 
+        user = dao.validate_user(username, password)
+        if user:
+            login_user(user=user)
+            return redirect('/admin')
+        else:
+            msg_err = "Đăng nhập không thành công"
+
+    return render_template('login.html', msg_err=msg_err)
+
+@app.route('/register-user', methods=['POST', 'GET'])
+def register_users():
+    msg_err = ""
+    name = request.form.get('name').strip()
+    username = request.form.get('username').strip()
+    password = request.form.get('password').strip()
+    confirm = request.form.get('confirm-password').strip()
+    email = request.form.get('email').strip()
+
+    if password == confirm:
+        dao.create_user(name=name, username=username, password=password, email=email)
+    else:
+        msg_err = "Đăng ký không thành công"
+    return render_template('login.html', msg_err=msg_err)
+       
+    
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
