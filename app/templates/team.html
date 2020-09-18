@@ -33,7 +33,9 @@
         {% for team in teams %}
         <div class="col-lg-4 col-md-6">
           <div class="member" data-aos="fade-up">
-            <div class="pic"><img src="{{ team.avatar }}" class="img-fluid" alt="{{ team.tenDB }}"></div>
+            <div class="pic">
+              <img src="{{ team.avatar }}" class="img-fluid" alt="{{ team.tenDB }}">
+            </div>
             <div class="member-info">
               <h4>{{ team.tenDB }}</h4>
               <span>Số cầu thủ: {{ team.soLuongCauThu }}</span>
