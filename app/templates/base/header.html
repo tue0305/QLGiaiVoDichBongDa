@@ -14,6 +14,13 @@
           <li><a href="{{ url_for('team') }}">Tìm đội bóng</a></li>
           <li><a href="{{ url_for('player') }}">Tìm cầu thủ</a></li>
           <li><a href="{{ url_for('login_users') }}">Đăng nhập</a></li>
+          <li class="drop-down"><a href="">Tạo</a>
+            <ul>
+              <li><a href="{{ url_for('create_tournament') }}">Tạo giải đấu</a></li>
+              <li><a href="{{ url_for('create_round') }}">Tạo vòng đấu</a></li>
+              <li><a href="{{ url_for('create_team') }}">Tạo đội bóng</a></li>
+            </ul>
+          </li>
           <li class="drop-down"><a href="">Hướng dẫn</a>
             <ul>
               <li><a href="#">Đăng ký đội bóng</a></li>

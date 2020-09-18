@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     role = Column(String(45), nullable=False, default= "Staff")
     active = Column(Boolean, default=True)
 
+
 class Tournament(db.Model):
     __tablename__ = "giaidau"
     maGD = Column(Integer, primary_key=True, autoincrement=True)
