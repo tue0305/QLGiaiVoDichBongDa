@@ -31,7 +31,7 @@
           {% if not current_user.is_authenticated %}
           <li><a href="{{ url_for('login_users') }}">Đăng nhập</a></li>
           {% else %}
-          <li class="drop-down"><a href="">ab</a>
+          <li class="drop-down"><a href="">Chào {{ current_user.name }}</a>
             <ul>
               <li><a href="{{ url_for('logout_users') }}">Đăng xuất</a></li>
             </ul>
