@@ -25,4 +25,19 @@ def create_user(name, username, password, email):
     db.session.add(user)
     db.session.commit()
     
-    
+def create_tournament(name, from_date, to_date, avatar):
+    tournament = Tournament(tenGD=name, ngayBatDau=from_date, ngayKetThuc=to_date, avatar=avatar)
+    db.session.add(tournament)
+    db.session.commit()
+
+def create_round(name):
+    round = Round(tenVD=name)
+    db.session.add(round)
+    db.session.commit()
+
+
+def create_team(name, home_yard, count, avatar):
+    team = Team(tenDB=name, sanNha=home_yard, soLuongCauThu=count, avatar=avatar)
+    db.session.add(team)
+    db.session.commit()
+

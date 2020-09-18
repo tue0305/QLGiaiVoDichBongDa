@@ -21,12 +21,6 @@ class User(db.Model, UserMixin):
     role = Column(String(45), default="Admin")
     active = Column(Boolean, default=True)
 
-    # def set_password(self, password):
-    #     self.passWord = generate_password_hash(password)
-    
-    # def check_password(self, password):
-    #     return check_password_hash(self.passWord, password)
-
 
 class Tournament(db.Model):
     __tablename__ = "giaidau"
