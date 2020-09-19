@@ -81,7 +81,9 @@ class Match(db.Model):
     doiKhach = relationship("Team", foreign_keys=[tranDau1])
 
     maVD = Column(Integer, ForeignKey(Round.maVD), nullable=False)
+    Round = relationship("Round")
     maGD = Column(Integer, ForeignKey(Tournament.maGD), nullable=False)
+    Tournament  = relationship("Tournament")
     
     FK_TranDau_BanThang = relationship("Goal", backref="trandau", lazy=True)
 

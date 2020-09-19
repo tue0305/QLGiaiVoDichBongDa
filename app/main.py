@@ -23,17 +23,7 @@ def index():
 def portfolio_details():
     return render_template('portfolio-details.html')
 
-@app.route('/tournament')
-def tournament():
-    return render_template('tournament.html', tournaments=dao.read_tournament())
 
-@app.route('/team')
-def team():
-    return render_template('team.html', teams=dao.read_team())
-
-@app.route('/player')
-def player():
-    return render_template('player.html', players=dao.read_player())
 
 @app.route('/login-user', methods=['GET', 'POST'])
 def login_users():
@@ -91,6 +81,33 @@ def create_tournament():
 
     return render_template('create-tournament.html')
 
+@app.route('/team', methods=['GET'])
+def team():
+    keyword = request.args.get('kw')
+    if keyword:
+        results = dao.findTeamByName(kw=keyword.strip().lower())
+        if results:
+            return render_template('team.html', rs=results)
+    return render_template('team.html', teams=dao.read_team())
+
+@app.route('/player', methods=['GET'])
+def player():
+    keyword = request.args.get('kw')
+    if keyword:
+        results = dao.findPlayerByName(kw=keyword.strip().lower())
+        if results:
+            return render_template('player.html', rs=results)
+    return render_template('player.html', players=dao.read_player())
+
+@app.route('/tournament', methods=['GET'])
+def tournament():
+    keyword = request.args.get('kw')
+    if keyword:
+        results = dao.findTournamentByName(kw=keyword.strip().lower())
+        if results:
+            return render_template('tournament.html', rs=results)
+    return render_template('tournament.html', tournaments=dao.read_tournament())
+
 
 @app.route('/create-round', methods=['GET', 'POST'])
 @login_required
@@ -100,6 +117,26 @@ def create_round():
         dao.create_round(name)
 
     return render_template('create-round.html')
+
+@app.route('/create-match', methods=['GET', 'POST'])
+@login_required
+def create_match(): 
+    if request.method == 'POST':
+        doiNha = request.form.get('doinha')
+        doiKhach = request.form.get('doikhach')
+        ngayThiDau = request.form.get('ngaythidau')
+        gioThiDau = request.form.get('giothidau')
+        
+        tenGD = request.form.get('giaidau')
+        
+        tenVD = request.form.get('vongdau')
+        dao.create_match(doiNha, doiKhach, ngayThiDau, gioThiDau, tenGD, tenVD)
+
+    return render_template('create-match.html', tournaments=dao.read_tournament(),
+     teams=dao.read_team(),
+     rounds = dao.read_round())
+
+
 
 
 @app.route('/create-team', methods=['GET', 'POST'])
