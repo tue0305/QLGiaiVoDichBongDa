@@ -4,7 +4,6 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, current_user, logout_user
 from sqlalchemy import (Boolean, Column, Date, Float, ForeignKey, Integer, String)
 from sqlalchemy.orm import relationship
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import admin, db
 
@@ -30,7 +29,7 @@ class Tournament(db.Model):
     ngayKetThuc = Column(Date, nullable=False)
     avatar = Column(String(200), default="https://img3.thuthuatphanmem.vn/uploads/2019/10/01/hinh-logo-bong-da_103805580.jpg")
 
-    FK_GiaiDau_TranDau = relationship("Match", backref="giaidau", lazy=True)
+    FK_GiaiDau_TranDauDoiBong = relationship("Tournament_Team", backref="giaidau", lazy=True)#
 
     def __str__(self):
         return self.tenGD
@@ -57,8 +56,16 @@ class Team(db.Model):
 
     FK_DoiBong_CauThu = relationship("Player", backref="doibong", lazy=True)
 
+    FK_DoiBong_TranDauDoiBong = relationship("Tournament_Team", backref="doibong", lazy=True)#
+
     def __str__(self):
         return self.tenDB
+
+
+class Tournament_Team(db.Model):
+    __tablename__ = "giaidauDoibong"
+    maDB = Column(Integer, ForeignKey(Team.maDB), primary_key=True)
+    maGD = Column(Integer, ForeignKey(Tournament.maGD), primary_key=True)
 
 
 class Match(db.Model): 
@@ -234,6 +241,8 @@ admin.add_view(GoalScoredModelView(GoalScored, db.session))
 admin.add_view(GoalModelView(Goal, db.session))
 admin.add_view(RegulationModelView(Regulation, db.session))
 admin.add_view(UserModelView(User, db.session))
+
+admin.add_view(ModelView(Tournament_Team, db.session))#
 
 admin.add_view(AboutUsView(name='About us'))
 admin.add_view(LogoutView(name='Logout'))
