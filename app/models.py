@@ -20,6 +20,8 @@ class User(db.Model, UserMixin):
     role = Column(String(45), default="Admin")
     active = Column(Boolean, default=True)
 
+    FK_User_Regulation = relationship("Regulation", backref="user", lazy=True)#
+
 
 class Tournament(db.Model):
     __tablename__ = "giaidau"
@@ -29,7 +31,7 @@ class Tournament(db.Model):
     ngayKetThuc = Column(Date, nullable=False)
     avatar = Column(String(200), default="https://img3.thuthuatphanmem.vn/uploads/2019/10/01/hinh-logo-bong-da_103805580.jpg")
 
-    FK_GiaiDau_TranDauDoiBong = relationship("Tournament_Team", backref="giaidau", lazy=True)#
+    FK_GiaiDau_TranDauDoiBong = relationship("Tournament_Team", backref="giaidau", lazy=True)
 
     def __str__(self):
         return self.tenGD
@@ -56,7 +58,7 @@ class Team(db.Model):
 
     FK_DoiBong_CauThu = relationship("Player", backref="doibong", lazy=True)
 
-    FK_DoiBong_TranDauDoiBong = relationship("Tournament_Team", backref="doibong", lazy=True)#
+    FK_DoiBong_TranDauDoiBong = relationship("Tournament_Team", backref="doibong", lazy=True)
 
     def __str__(self):
         return self.tenDB
@@ -153,6 +155,8 @@ class Regulation(db.Model):
     diemSoHoa = Column(Integer, nullable=False)
     thuTuUuTienXepHang = Column(Integer, nullable=False)
 
+    maUser = Column(Integer, ForeignKey(User.id), nullable=False)#
+
 #-------admin-------
 
 class TournamentModelView(ModelView):
@@ -214,6 +218,12 @@ class UserModelView(ModelView):
 
     def is_accessible(self):
         return current_user.is_authenticated
+    
+class Tournament_TeamModelView(ModelView):
+    column_display_pk = True
+
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 #======= view =======
 
@@ -244,7 +254,7 @@ admin.add_view(GoalModelView(Goal, db.session))
 admin.add_view(RegulationModelView(Regulation, db.session))
 admin.add_view(UserModelView(User, db.session))
 
-admin.add_view(ModelView(Tournament_Team, db.session))#
+admin.add_view(Tournament_TeamModelView(Tournament_Team, db.session))#
 
 admin.add_view(AboutUsView(name='About us'))
 admin.add_view(LogoutView(name='Logout'))
