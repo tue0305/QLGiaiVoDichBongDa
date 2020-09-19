@@ -20,16 +20,38 @@
             <h2>Đội bóng</h2>
             <div class="container h-100">
               <div class="d-flex justify-content-center h-100">
-                <div class="searchbar">
-                  <input class="search_input" type="text" name="" placeholder="Search...">
-                  <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
-                </div>
+                <form class="" >
+                  <div class="searchbar">
+                    <input class="search_input" type="text" name="kw" placeholder="Search...">
+                    <button type="submit" class="search_icon"><i class="fas fa-search"></i></button>
+                  </div>
+                </form>
               </div>
             </div>
         </div>
 
       <div class="row">
-        {% if teams %}
+        {% if rs %}
+        {% for team in rs %}
+        <div class="col-lg-4 col-md-6">
+          <div class="member" data-aos="fade-up">
+            <div class="pic">
+              <img src="{{ team.avatar }}" class="img-fluid" alt="{{ team.tenDB }}">
+            </div>
+            <div class="member-info">
+              <h4>{{ team.tenDB }}</h4>
+              <span>Số cầu thủ: {{ team.soLuongCauThu }}</span>
+              <div class="social">
+                <a href=""><i class="icofont-twitter"></i></a>
+                <a href=""><i class="icofont-facebook"></i></a>
+                <a href=""><i class="icofont-instagram"></i></a>
+                <a href=""><i class="icofont-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
         {% for team in teams %}
         <div class="col-lg-4 col-md-6">
           <div class="member" data-aos="fade-up">
